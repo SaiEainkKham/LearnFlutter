@@ -12,6 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Quiz App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
       home: HomePage(),
     );
   }
@@ -27,36 +30,54 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // variable declaration
   int _questionIndex = 0;
+  int _totalScore = 0;
   var questionList = [
     {
       'questionText': 'I like to go outside.',
       'answers': [
-        'Yes', 'Sometimes', 'No'
+        {'text': 'Yes', 'Score': 5},
+        {'text': 'Sometime', 'Score': 3},
+        {'text': 'No', 'Score': 1},
       ]
     },
     {
       'questionText': 'I like to go to party.',
       'answers': [
-        'Yes', 'Sometimes', 'No'
+        {'text': 'Yes', 'Score': 5},
+        {'text': 'Sometime', 'Score': 3},
+        {'text': 'No', 'Score': 1},
       ]
     },
     {
       'questionText': 'I enjoy travelling.',
       'answers': [
-        'Yes', 'Sometimes', 'No'
+        {'text': 'Yes', 'Score': 5},
+        {'text': 'Sometime', 'Score': 3},
+        {'text': 'No', 'Score': 1},
       ]
     },
     {
       'questionText': 'I love to stary at home at weekend',
       'answers': [
-        'Yes', 'Sometimes', 'No'
+        {'text': 'Yes', 'Score': 5},
+        {'text': 'Sometime', 'Score': 3},
+        {'text': 'No', 'Score': 1},
       ]
     },
   ];
 
-  void _answerPressed() {
+  void _answerPressed(int score) {
+    _totalScore += score;
     setState(() {
       _questionIndex++;
+    });
+    print(_totalScore);
+  }
+
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
     });
   }
 
@@ -64,11 +85,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quiz App'),
+        title: const Text('Quiz App'),
       ),
       body: _questionIndex < questionList.length ? 
       Quiz(questionList: questionList, selectHandler: _answerPressed, questionIndex: _questionIndex):
-      Result(),
+      Result(resultScore: _totalScore, selectHandler: _resetQuiz),
     );
   }
 }
