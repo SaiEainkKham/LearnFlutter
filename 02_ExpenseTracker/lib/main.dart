@@ -19,6 +19,19 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(),
       theme: ThemeData(
         primarySwatch: Colors.indigo,
+        colorScheme: const ColorScheme(
+          brightness: Brightness.light,
+          primary: Colors.indigo,
+          onPrimary: Colors.grey,
+          secondary: Colors.purple,
+          onSecondary: Colors.brown,
+          error: Colors.red,
+          onError: Colors.yellow,
+          background: Colors.green,
+          onBackground: Colors.orange,
+          surface: Colors.blue,
+          onSurface: Colors.cyan,
+        ),
         appBarTheme: AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'OpenSans',
@@ -45,11 +58,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactionList = [];
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime choosenDate) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: choosenDate,
       id: DateTime.now().toString(),
     );
 
@@ -64,6 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (_) {
           return NewTransaction(_addNewTransaction);
         });
+  }
+
+  void _deleteTx(String id) {
+    setState(() {
+      _transactionList.removeWhere((tx) => tx.id == id);
+    });
   }
 
   @override
@@ -86,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
               width: double.infinity,
               child: Chart(_transactionList),
             ),
-            TransactionList(_transactionList),
+            TransactionList(_transactionList, _deleteTx),
           ],
         ),
       ),
