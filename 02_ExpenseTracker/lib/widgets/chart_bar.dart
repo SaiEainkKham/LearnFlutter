@@ -14,39 +14,37 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Column(
-          children: [
-            Text('\$${spendingAmount.toStringAsFixed(0)}'),
-            SizedBox(height: 4),
-            Container(
-              height: 60,
-              width: 10,
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  FractionallySizedBox(
-                    heightFactor: spendingPercentage,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  )
-                ],
+        FittedBox(
+          child: Text('\$${spendingAmount.toStringAsFixed(0)}'),
+        ),
+        SizedBox(height: 4),
+        Container(
+          height: 60,
+          width: 10,
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 2, color: Colors.grey),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-            ),
-            SizedBox(height: 4),
-            Text(label),
-          ],
-        )
+              FractionallySizedBox(
+                heightFactor: spendingPercentage,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(label),
       ],
     );
   }

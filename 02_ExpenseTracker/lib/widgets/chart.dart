@@ -40,15 +40,24 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      margin: EdgeInsets.all(12),
-      child: Row(
-        children: groupTransactionvalue.map((data) {
-          return ChartBar(
-            label: data['day'].toString(),
-            spendingAmount: data['amount'] as double,
-            spendingPercentage: totalSpending,
-          );
-        }).toList(),
+      margin: EdgeInsets.all(20),
+      child: Padding(
+        padding: EdgeInsets.all(12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: groupTransactionvalue.map((data) {
+            return Flexible(
+              fit: FlexFit.tight,
+              child: ChartBar(
+                label: data['day'].toString(),
+                spendingAmount: data['amount'] as double,
+                spendingPercentage: totalSpending == 0.0
+                    ? 0.0
+                    : (data['amount'] as double) / totalSpending,
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
