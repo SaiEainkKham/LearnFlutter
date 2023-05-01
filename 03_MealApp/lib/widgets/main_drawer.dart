@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:meal_app/pages/category_page.dart';
 import 'package:meal_app/pages/filter_page.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -41,7 +40,7 @@ class MainDrawer extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           _buildListTile(

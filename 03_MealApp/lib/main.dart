@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> {
   };
 
   List<Meal> _availableMeal = DUMMY_MEALS;
+  List<Meal> _favoriteMeal = [];
 
   void _setFilters(Map<String, bool> filterdata) {
     setState(() {
@@ -41,6 +42,23 @@ class _MyAppState extends State<MyApp> {
         return true;
       }).toList();
     });
+  }
+
+  void _toggleFavorite(String mealId) {
+    final existingIndex = _favoriteMeal.indexWhere((meal) => meal.id == mealId);
+    if (existingIndex >= 0) {
+      setState(() {
+        _favoriteMeal.removeAt(existingIndex);
+      });
+    } else {
+      setState(() {
+        _favoriteMeal.add(DUMMY_MEALS.firstWhere((meal) => meal.id == mealId));
+      });
+    }
+  }
+
+  bool isMealFavorite(String mealId) {
+    return _favoriteMeal.any((meal) => meal.id == mealId);
   }
 
   @override
@@ -74,11 +92,13 @@ class _MyAppState extends State<MyApp> {
       //home: const MyHomePage(),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => MyHomePage(),
+        '/': (ctx) => MyHomePage(favoriteMeal: _favoriteMeal),
         CategoryPage.routeName: (ctx) => CategoryPage(),
         ItemPage.routeName: (ctx) => ItemPage(availableMeals: _availableMeal),
-        MealDetailPage.routeName: (ctx) => MealDetailPage(),
-        FavoritePage.routeName: (ctx) => FavoritePage(),
+        MealDetailPage.routeName: (ctx) => MealDetailPage(
+            isFavorite: isMealFavorite, toggleFavorite: _toggleFavorite),
+        FavoritePage.routeName: (ctx) =>
+            FavoritePage(favoriteMeal: _favoriteMeal),
         FilteredPage.routeName: (ctx) =>
             FilteredPage(saveFilter: _setFilters, currentFilter: _filters),
       },

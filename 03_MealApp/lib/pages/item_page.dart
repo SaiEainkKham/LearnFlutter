@@ -36,22 +36,23 @@ class _ItemPageState extends State<ItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(categoryTitle as String),
-          //automaticallyImplyLeading: false,
-        ),
-        body: ListView.builder(
-          itemBuilder: (ctx, index) {
-            return MealItem(
-              id: displayedMeals![index].id,
-              title: displayedMeals![index].title,
-              imageUrl: displayedMeals![index].imageUrl,
-              duration: displayedMeals![index].duration,
-              complexity: displayedMeals![index].complexity,
-              affordability: displayedMeals![index].affordability,
-            );
-          },
-          itemCount: displayedMeals?.length,
-        ));
+      appBar: AppBar(
+        title: Text(categoryTitle as String),
+        //automaticallyImplyLeading: false,
+      ),
+      body: ListView.builder(
+        itemBuilder: (ctx, index) {
+          return MealItem(
+            id: displayedMeals![index].id,
+            title: displayedMeals![index].title,
+            imageUrl: displayedMeals![index].imageUrl,
+            duration: displayedMeals![index].duration,
+            complexity: displayedMeals![index].complexity,
+            affordability: displayedMeals![index].affordability,
+          );
+        },
+        itemCount: displayedMeals?.length,
+      ),
+    );
   }
 }

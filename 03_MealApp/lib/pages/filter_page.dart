@@ -62,7 +62,7 @@ class _FilteredPageState extends State<FilteredPage> {
               };
               widget.saveFilter(selectedFilter);
             },
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
           )
         ],
       ),
