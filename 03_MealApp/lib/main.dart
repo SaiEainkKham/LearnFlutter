@@ -6,12 +6,42 @@ import 'package:meal_app/pages/favorite_page.dart';
 import 'package:meal_app/pages/filter_page.dart';
 import 'package:meal_app/pages/item_page.dart';
 import 'package:meal_app/pages/meal_detail_page.dart';
+import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/data/dummy_data.dart';
 import 'package:meal_app/pages/my_home_page.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'gluten': false,
+    'lactose': false,
+    'vegan': false,
+    'vegetarian': false,
+  };
+
+  List<Meal> _availableMeal = DUMMY_MEALS;
+
+  void _setFilters(Map<String, bool> filterdata) {
+    setState(() {
+      _filters = filterdata;
+      _availableMeal = DUMMY_MEALS.where((meal) {
+        if (_filters['gluten']! && !meal.isGlutenFree) return false;
+        if (_filters['lactose']! && !meal.isLactoseFree) return false;
+        if (_filters['vegan']! && !meal.isVegan) return false;
+        if (_filters['vegetarian']! && !meal.isVegetarian) return false;
+
+        return true;
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +76,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (ctx) => MyHomePage(),
         CategoryPage.routeName: (ctx) => CategoryPage(),
-        ItemPage.routeName: (ctx) => ItemPage(),
+        ItemPage.routeName: (ctx) => ItemPage(availableMeals: _availableMeal),
         MealDetailPage.routeName: (ctx) => MealDetailPage(),
         FavoritePage.routeName: (ctx) => FavoritePage(),
-        FilteredPage.routeName: (ctx) => FilteredPage(),
+        FilteredPage.routeName: (ctx) =>
+            FilteredPage(saveFilter: _setFilters, currentFilter: _filters),
       },
       onGenerateRoute: (settings) {
         return MaterialPageRoute(

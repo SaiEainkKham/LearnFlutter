@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Favorite'),
         ],
       ),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
     );
   }
 }
