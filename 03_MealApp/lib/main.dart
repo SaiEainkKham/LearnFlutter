@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:meal_app/pages/category_page.dart';
+import 'package:meal_app/pages/item_page.dart';
 
 void main() => runApp(const MyApp());
 
@@ -20,7 +21,13 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ))),
-      home: const MyHomePage(),
+      //home: const MyHomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (ctx) => MyHomePage(),
+        CategoryPage.routeName: (ctx) => CategoryPage(),
+        ItemPage.routeName: (ctx) => ItemPage(),
+      },
     );
   }
 }

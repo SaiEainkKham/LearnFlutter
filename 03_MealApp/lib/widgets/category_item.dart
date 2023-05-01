@@ -3,19 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:meal_app/pages/item_page.dart';
 
 class CategoryItem extends StatelessWidget {
+  final String id;
   final String title;
   final Color color;
 
   const CategoryItem({
     Key? key,
+    required this.id,
     required this.title,
     this.color = Colors.orange,
   }) : super(key: key);
 
   void _selectItem(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => ItemPage(),
-    ));
+    Navigator.of(context).pushNamed(
+      '/item-page',
+      arguments: {
+        'id': id,
+        'title': title,
+      },
+    );
   }
 
   @override

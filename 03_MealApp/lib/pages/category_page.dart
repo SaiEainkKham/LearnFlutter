@@ -4,6 +4,8 @@ import 'package:meal_app/widgets/category_item.dart';
 import 'package:meal_app/data/dummy_data.dart';
 
 class CategoryPage extends StatelessWidget {
+  static const routeName = '/category-page';
+
   const CategoryPage({super.key});
 
   @override
@@ -19,6 +21,7 @@ class CategoryPage extends StatelessWidget {
         ),
         children: DUMMY_CATEGORIES.map((data) {
           return CategoryItem(
+            id: data.id,
             title: data.title,
             color: data.color,
           );
