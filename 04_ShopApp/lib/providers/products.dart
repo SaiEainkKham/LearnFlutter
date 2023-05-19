@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shop_app/models/product.dart';
+import 'package:shop_app/providers/product.dart';
 
 class Products with ChangeNotifier {
   // ignore: prefer_final_fields
@@ -39,6 +39,8 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  var _showFavoriteOnly = false;
+
   List<Product> get items {
     return [..._items];
   }
@@ -50,5 +52,9 @@ class Products with ChangeNotifier {
 
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
+  }
+
+  List<Product> get favoriteItems {
+    return _items.where((item) => item.isFavorite).toList();
   }
 }

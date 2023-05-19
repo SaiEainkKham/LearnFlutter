@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 import 'package:shop_app/screens/product_overview_screen.dart';
 import 'package:shop_app/providers/products.dart';
+import 'package:shop_app/providers/cart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,15 +15,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (content) => Products(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (content) => Products()),
+        ChangeNotifierProvider(create: (content) => Cart()),
+      ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Shop App',
         //home: ProductOverviewScreen(),
         initialRoute: '/',
         theme: ThemeData(
           fontFamily: 'Lato',
-          primarySwatch: Colors.purple,
+          //primarySwatch: Colors.purple,
           iconTheme: const IconThemeData(color: Colors.orange),
           colorScheme: const ColorScheme(
             brightness: Brightness.light,

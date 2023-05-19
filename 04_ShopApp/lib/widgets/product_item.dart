@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shop_app/screens/product_detail_screen.dart';
-import 'package:shop_app/models/product.dart';
+import 'package:shop_app/providers/product.dart';
+import 'package:shop_app/providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
   // final String id;
@@ -18,29 +19,39 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
+    final cartData = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: IconButton(
-            icon: Icon(
-              product.isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: Theme.of(context).iconTheme.color,
+          leading: Consumer<Product>(
+            builder: (ctx, product, child) => IconButton(
+              icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              onPressed: () {
+                product.toggleFavoriteStatus();
+                //print('${product.isFavorite}');
+              },
             ),
-            onPressed: () => product.toggleFavoriteStatus(),
           ),
           title: Text(
             product.title,
             textAlign: TextAlign.center,
           ),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Theme.of(context).iconTheme.color,
+          trailing: Consumer<Product>(
+            builder: (ctx, product, child) => IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              onPressed: () {
+                cartData.addItem(product.id, product.price, product.title);
+              },
             ),
-            onPressed: () {},
           ),
         ),
         child: GestureDetector(
