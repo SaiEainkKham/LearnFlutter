@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/widgets/product_grid.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/widgets/badge.dart' as bd;
+import 'package:shop_app/screens/cart_screen.dart';
+import 'package:shop_app/widgets/app_drawer.dart';
 
 enum FilterOptions {
   // ignore: constant_identifier_names
@@ -57,7 +59,12 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               child: ch as Widget,
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  CartScreen.routeName,
+                );
+              },
               icon: const Icon(Icons.shopping_cart),
             ),
             //child: IconButton(onPressed: , icon: icon),
@@ -65,6 +72,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       body: ProductGrid(showFavoriteOnly),
+      drawer: const AppDrawer(),
     );
   }
 }
