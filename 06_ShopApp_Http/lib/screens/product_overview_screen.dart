@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shop_app/widgets/product_grid.dart';
 import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/products.dart';
 import 'package:shop_app/widgets/badge.dart' as bd;
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
@@ -15,7 +16,7 @@ enum FilterOptions {
 }
 
 class ProductOverviewScreen extends StatefulWidget {
-  ProductOverviewScreen({super.key});
+  const ProductOverviewScreen({super.key});
 
   @override
   State<ProductOverviewScreen> createState() => _ProductOverviewScreenState();
@@ -23,6 +24,36 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var showFavoriteOnly = false;
+  // * Alternative Solution
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    //Provider.of<Products>(context, listen: false).fetchProducts();
+    //Future.delayed(Duration.zero).then(
+    //    (_) => Provider.of<Products>(context, listen: false).fetchProducts());
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchProducts().then(
+        (_) {
+          setState(() {
+            _isLoading = false;
+          });
+        },
+      );
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +102,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           )
         ],
       ),
-      body: ProductGrid(showFavoriteOnly),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ProductGrid(showFavoriteOnly),
       drawer: const AppDrawer(),
     );
   }
