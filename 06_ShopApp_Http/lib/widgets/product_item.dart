@@ -6,6 +6,8 @@ import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
+  const ProductItem({super.key});
+
   // final String id;
   // final String title;
   // final String imageUrl;
@@ -19,6 +21,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMsg = ScaffoldMessenger.of(context);
     final product = Provider.of<Product>(context, listen: false);
     final cartData = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
@@ -32,8 +35,20 @@ class ProductItem extends StatelessWidget {
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: Theme.of(context).iconTheme.color,
               ),
-              onPressed: () {
-                product.toggleFavoriteStatus();
+              onPressed: () async {
+                try {
+                  await product.toggleFavoriteStatus();
+                } catch (error) {
+                  scaffoldMsg.hideCurrentSnackBar();
+                  scaffoldMsg.showSnackBar(
+                    const SnackBar(
+                      content:
+                          Text('Action Failed', textAlign: TextAlign.center),
+                      duration: Duration(seconds: 2),
+                      backgroundColor: Colors.black54,
+                    ),
+                  );
+                }
                 //print('${product.isFavorite}');
               },
             ),
