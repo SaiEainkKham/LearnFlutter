@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
             background: Colors.blue,
             onBackground: Colors.white,
             surface: Colors.grey,
-            onSurface: Colors.white,
+            onSurface: Colors.black26,
           ),
           textTheme: TextTheme(
             displaySmall: TextStyle(
@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           ProductDetailScreen.routeName: (context) =>
               const ProductDetailScreen(),
           CartScreen.routeName: (context) => const CartScreen(),
-          OrderScreens.routeName: (context) => const OrderScreens(),
+          OrderScreen.routeName: (context) => const OrderScreen(),
           UserProductScreen.routeName: (context) => const UserProductScreen(),
           EditProductScreen.routeName: (context) => const EditProductScreen(),
         },
