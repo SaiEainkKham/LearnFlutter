@@ -8,8 +8,9 @@ import 'package:shop_app/providers/product.dart';
 
 class Products with ChangeNotifier {
   final String authToken;
+  final String userId;
 
-  Products(this.authToken, this._items);
+  Products(this.authToken, this.userId, this._items);
 
   // ignore: prefer_final_fields
   List<Product> _items = [
@@ -83,7 +84,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    final url =
+    var url =
         'https://fir-shop-app-aedd8-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken';
 
     try {
@@ -92,6 +93,13 @@ class Products with ChangeNotifier {
       //print('run fetch');
       final extractProduct = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProduct = [];
+
+      // Remove if check to extractProduct
+
+      url =
+          'https://fir-shop-app-aedd8-default-rtdb.asia-southeast1.firebasedatabase.app/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(Uri.parse(url));
+      final favoriteData = json.decode(favoriteResponse.body);
       extractProduct.forEach((key, value) {
         loadedProduct.add(
           Product(
@@ -100,7 +108,8 @@ class Products with ChangeNotifier {
             description: value['description'],
             price: value['price'],
             imageUrl: value['imageUrl'],
-            isFavorite: value['isFavorite'],
+            isFavorite:
+                favoriteData == null ? false : favoriteData[key] ?? false,
           ),
         );
       });
