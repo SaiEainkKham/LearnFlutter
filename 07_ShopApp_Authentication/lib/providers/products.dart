@@ -7,6 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:shop_app/providers/product.dart';
 
 class Products with ChangeNotifier {
+  final String authToken;
+
+  Products(this.authToken, this._items);
+
   // ignore: prefer_final_fields
   List<Product> _items = [
     // Product(
@@ -79,8 +83,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    const url =
-        'https://fir-shop-app-aedd8-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
+    final url =
+        'https://fir-shop-app-aedd8-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken';
 
     try {
       final response = await http.get(Uri.parse(url));

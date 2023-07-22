@@ -25,7 +25,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
-        ChangeNotifierProvider(create: (_) => Products()),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (_) => Products('', []),
+          update: (_, auth, previousProducts) => Products(auth.token as String,
+              previousProducts == null ? [] : previousProducts.items),
+        ),
         ChangeNotifierProvider(create: (_) => Cart()),
         ChangeNotifierProvider(create: (_) => Orders()),
       ],
@@ -40,7 +44,7 @@ class MyApp extends StatelessWidget {
             iconTheme: const IconThemeData(color: Colors.orange),
             colorScheme: const ColorScheme(
               brightness: Brightness.light,
-              primary: Colors.purple,
+              primary: Colors.deepPurple,
               onPrimary: Colors.white,
               secondary: Colors.orange,
               onSecondary: Colors.white,
