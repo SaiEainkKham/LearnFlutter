@@ -11,7 +11,7 @@ class Auth with ChangeNotifier {
   String? _userID;
 
   bool get isAuth {
-    return token != null;
+    return token != '';
   }
 
   String? get token {
@@ -20,7 +20,7 @@ class Auth with ChangeNotifier {
         _token != null) {
       return _token;
     }
-    return null;
+    return '';
   }
 
   String? get userId {
@@ -66,5 +66,12 @@ class Auth with ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     return _authenticate(email, password, 'signInWithPassword');
+  }
+
+  void logout() {
+    _token = '';
+    _userID = '';
+    _expiryDate = DateTime.now();
+    notifyListeners();
   }
 }
