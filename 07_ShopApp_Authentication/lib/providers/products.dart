@@ -64,7 +64,8 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
+          'creatorId': userId,
+          //'isFavorite': product.isFavorite,
         }),
       );
       //
@@ -83,9 +84,14 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchProducts([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+
     var url =
-        'https://fir-shop-app-aedd8-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken';
+        'https://fir-shop-app-aedd8-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken&$filterString';
+
+    //print('auth token is $authToken and \n userId is $userId');
 
     try {
       final response = await http.get(Uri.parse(url));

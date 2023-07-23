@@ -32,7 +32,7 @@ class ProductDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Text(loadedProduct.id),
+            Text(loadedProduct.title),
             const SizedBox(height: 10),
             Text(
               '\$${loadedProduct.price}',
