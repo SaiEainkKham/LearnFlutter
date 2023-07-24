@@ -1,0 +1,112 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:shop_app/widgets/product_grid.dart';
+import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/products.dart';
+import 'package:shop_app/widgets/badge.dart' as bd;
+import 'package:shop_app/screens/cart_screen.dart';
+import 'package:shop_app/widgets/app_drawer.dart';
+
+enum FilterOptions {
+  // ignore: constant_identifier_names
+  Favorites,
+  // ignore: constant_identifier_names
+  All,
+}
+
+class ProductOverviewScreen extends StatefulWidget {
+  static const routeName = '/product-overview';
+  const ProductOverviewScreen({super.key});
+
+  @override
+  State<ProductOverviewScreen> createState() => _ProductOverviewScreenState();
+}
+
+class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
+  var showFavoriteOnly = false;
+  // * Alternative Solution
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    //Provider.of<Products>(context, listen: false).fetchProducts();
+    //Future.delayed(Duration.zero).then(
+    //    (_) => Provider.of<Products>(context, listen: false).fetchProducts());
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchProducts().then(
+        (_) {
+          setState(() {
+            _isLoading = false;
+          });
+        },
+      );
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('My Shop'),
+        actions: [
+          PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.Favorites) {
+                  showFavoriteOnly = true;
+                } else {
+                  showFavoriteOnly = false;
+                }
+              });
+            },
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: FilterOptions.Favorites,
+                child: Text('Only Favorite'),
+              ),
+              const PopupMenuItem(
+                value: FilterOptions.All,
+                child: Text('Show All'),
+              )
+            ],
+            icon: const Icon(Icons.more_vert),
+          ),
+          Consumer<Cart>(
+            builder: (ctx, cartData, ch) => bd.Badge(
+              value: cartData.itemCount.toString(),
+              color: Colors.pink,
+              child: ch as Widget,
+            ),
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  CartScreen.routeName,
+                );
+              },
+              icon: const Icon(Icons.shopping_cart),
+            ),
+            //child: IconButton(onPressed: , icon: icon),
+          )
+        ],
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ProductGrid(showFavoriteOnly),
+      drawer: const AppDrawer(),
+    );
+  }
+}
