@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:shop_app/models/http_exception.dart';
 
@@ -56,11 +57,58 @@ class Auth with ChangeNotifier {
           seconds: int.parse(responseData['expiresIn']),
         ),
       );
-      autoLogout();
+      _autoLogout();
       notifyListeners();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({
+        'token': _token,
+        'userId': _userID,
+        'expiryDate': _expiryDate!.toIso8601String(),
+      });
+      prefs.setString('userData', userData);
+      print('This is token');
+      print('\n');
+      print(_token);
+      print('\n');
+      print(_userID);
+      print('\n');
+      print(_expiryDate!.toIso8601String());
     } catch (error) {
       rethrow;
     }
+  }
+
+  Future<bool> tryAutoLogin() async {
+    print('Trying autoLogin');
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      print('userData key not found!');
+      return false;
+    }
+    final extractedUserData = json.decode(prefs.getString('userData') as String)
+        as Map<String, dynamic>;
+    final expiryDate =
+        DateTime.parse(extractedUserData['expiryDate'] as String);
+
+    if (expiryDate.isBefore(DateTime.now())) {
+      print('Expiry Date not found');
+      return false;
+    }
+    _token = extractedUserData['token'] as String;
+    _userID = extractedUserData['userId'] as String;
+    _expiryDate = expiryDate;
+    notifyListeners();
+    _autoLogout();
+    print('AutoLogin Success');
+    print('\n');
+    print('This is autologin');
+    print('\n');
+    print(_token);
+    print('\n');
+    print(_userID);
+    print('\n');
+    print(_expiryDate);
+    return true;
   }
 
   Future<void> signup(String email, String password) async {
@@ -71,18 +119,21 @@ class Auth with ChangeNotifier {
     return _authenticate(email, password, 'signInWithPassword');
   }
 
-  void logout() {
+  Future<void> logout() async {
     _token = '';
     _userID = '';
     _expiryDate = DateTime.now();
-    notifyListeners();
     if (_authTimer != null) {
       _authTimer!.cancel();
       _authTimer = null;
     }
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    //prefs.remove('userData');
+    prefs.clear();
   }
 
-  void autoLogout() {
+  void _autoLogout() {
     if (_authTimer != null) {
       _authTimer!.cancel();
     }

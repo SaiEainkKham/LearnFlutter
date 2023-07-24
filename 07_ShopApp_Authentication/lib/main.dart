@@ -5,6 +5,7 @@ import 'package:shop_app/screens/order_screen.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 import 'package:shop_app/screens/product_overview_screen.dart';
 import 'package:shop_app/screens/cart_screen.dart';
+import 'package:shop_app/screens/splash_screen.dart';
 import 'package:shop_app/screens/user_product_screen.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/screens/auth_screen.dart';
@@ -71,8 +72,16 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          home:
-              auth.isAuth ? const ProductOverviewScreen() : const AuthScreen(),
+          home: auth.isAuth
+              ? const ProductOverviewScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? const SplashScreen()
+                          : const AuthScreen(),
+                ),
           routes: {
             //'/': (context) => const AuthScreen(),
             ProductOverviewScreen.routeName: (context) =>
@@ -84,6 +93,7 @@ class MyApp extends StatelessWidget {
             UserProductScreen.routeName: (context) => const UserProductScreen(),
             EditProductScreen.routeName: (context) => const EditProductScreen(),
             AuthScreen.routeName: (context) => const AuthScreen(),
+            SplashScreen.routeName: (context) => const SplashScreen(),
           },
         ),
       ),
