@@ -120,6 +120,7 @@ class Products with ChangeNotifier {
         );
       });
       _items = loadedProduct;
+      print(favoriteData);
       notifyListeners();
     } catch (error) {
       //print('error');

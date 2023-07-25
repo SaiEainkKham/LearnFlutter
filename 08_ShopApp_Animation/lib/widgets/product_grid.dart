@@ -14,6 +14,7 @@ class ProductGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context);
     final products = showFavs ? productData.favoriteItems : productData.items;
+    //final products = productData.favoriteItems;
 
     return GridView.builder(
       padding: const EdgeInsets.all(10),
@@ -25,7 +26,8 @@ class ProductGrid extends StatelessWidget {
       ),
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
         value: products[i],
-        child: const ProductItem(
+        // ignore: prefer_const_constructors
+        child: ProductItem(
             // id: products[i].id,
             // title: products[i].title,
             // imageUrl: products[i].imageUrl,

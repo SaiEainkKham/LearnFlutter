@@ -52,7 +52,7 @@ class ProductItem extends StatelessWidget {
                     ),
                   );
                 }
-                //print('${product.isFavorite}');
+                print('The id ${product.id} is ${product.isFavorite}');
               },
             ),
           ),
@@ -91,13 +91,16 @@ class ProductItem extends StatelessWidget {
             ProductDetailScreen.routeName,
             arguments: product.id,
           ),
-          child: FadeInImage(
-            placeholder:
-                const AssetImage('assets/images/product-placeholder.png'),
-            image: NetworkImage(
-              product.imageUrl,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder:
+                  const AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(
+                product.imageUrl,
+              ),
+              fit: BoxFit.contain,
             ),
-            fit: BoxFit.contain,
           ),
         ),
       ),
