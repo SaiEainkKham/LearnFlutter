@@ -39,12 +39,13 @@ class ProductDetailScreen extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate([
               const SizedBox(height: 10),
-              Text(loadedProduct.id),
+              Text(loadedProduct.title, textAlign: TextAlign.center),
               const SizedBox(height: 10),
-              Text('${loadedProduct.isFavorite}'),
+              Text('${loadedProduct.isFavorite}', textAlign: TextAlign.center),
               const SizedBox(height: 10),
               Text(
                 '\$${loadedProduct.price}',
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 20,
