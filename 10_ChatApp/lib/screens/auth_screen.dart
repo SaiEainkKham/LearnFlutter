@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:chat_app/widgets/auth_form.dart';
 
@@ -10,8 +12,38 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  final _auth = FirebaseAuth.instance;
   void _submitAuthForm(
-      String email, String password, String useraame, bool isLogin) {}
+    String email,
+    String password,
+    String useraame,
+    bool isLogin,
+    BuildContext ctx,
+  ) async {
+    UserCredential authResult;
+    try {
+      if (isLogin) {
+        authResult = await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+      } else {
+        authResult = await _auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+      }
+    } on FirebaseAuthException catch (error) {
+      var message = 'An error occured, please check your credential';
+      if (error.message != null) {
+        message = error.message as String;
+        //print(message);
+      }
+      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(ctx).colorScheme.error,
+      ));
+    } catch (error) {
+      // Do error handling
+      //print(error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
