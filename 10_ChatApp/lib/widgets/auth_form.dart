@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
-  const AuthForm({required this.submitFn, super.key});
+  const AuthForm({required this.submitFn, required this.isLoading, super.key});
+
   final void Function(
     String email,
     String username,
@@ -9,6 +10,7 @@ class AuthForm extends StatefulWidget {
     bool isLogin,
     BuildContext ctx,
   ) submitFn;
+  final bool isLoading;
 
   @override
   State<AuthForm> createState() => _AuthFormState();
@@ -16,7 +18,7 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
-  var _isLogin = true;
+  var _isLogin = false;
 
   var _userEmail = '';
   var _userName = '';
@@ -90,8 +92,8 @@ class _AuthFormState extends State<AuthForm> {
                       if (value == null) {
                         return 'Please provide the password.';
                       }
-                      if (value.length < 8) {
-                        return 'Please enter at least 8 characters long.';
+                      if (value.length < 6) {
+                        return 'Please enter at least 6 characters long.';
                       }
                       return null;
                     },
