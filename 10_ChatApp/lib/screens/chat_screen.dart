@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:chat_app/widgets/chat/messages.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -7,39 +11,45 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('chats/Uq6GShKMpW62LIIyl9QC/messages')
-            .snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          if (streamSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          final docsData = streamSnapshot.data!.docs;
-
-          return ListView.builder(
-            itemCount: docsData.length,
-            itemBuilder: (context, index) {
-              final dataMap = docsData[index].data() as Map<String, dynamic>;
-              final textValue = dataMap['text'] ?? 'a';
-              return Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(textValue),
-              );
+      appBar: AppBar(
+        title: const Text('Best Chatting App'),
+        actions: [
+          DropdownButton(
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+            items: const [
+              DropdownMenuItem(
+                value: 'logout',
+                child: SizedBox(
+                  child: Row(children: [
+                    Icon(
+                      Icons.exit_to_app,
+                      color: Colors.black,
+                    ),
+                    SizedBox(width: 8),
+                    Text('Logout')
+                  ]),
+                ),
+              ),
+            ],
+            onChanged: (itemIdendifier) {
+              if (itemIdendifier == 'logout') {
+                FirebaseAuth.instance.signOut();
+              }
             },
-          );
-        },
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          FirebaseFirestore.instance
-              .collection('chats/Uq6GShKMpW62LIIyl9QC/messages')
-              .add({'text': 'This is added by clicking the button!'});
-        },
+      body: Container(
+        child: Column(
+          children: [
+            Expanded(
+              child: Messages(),
+            ),
+          ],
+        ),
       ),
     );
   }

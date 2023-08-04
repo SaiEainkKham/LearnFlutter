@@ -17,8 +17,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _submitAuthForm(
     String email,
-    String password,
     String username,
+    String password,
     bool isLogin,
     BuildContext ctx,
   ) async {
@@ -31,6 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
       if (isLogin) {
         authResult = await _auth.signInWithEmailAndPassword(
             email: email, password: password);
+        print('success login');
       } else {
         authResult = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
