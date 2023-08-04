@@ -1,20 +1,45 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
   final String message;
   final String username;
+  final String userImage;
   final bool isMe;
-  const MessageBubble(
+  MessageBubble(
       {required this.message,
       required this.username,
+      required this.userImage,
       required this.isMe,
       super.key});
+
+  final TextStyle textStyle = const TextStyle(
+    fontSize: 30,
+    color: Colors.white,
+  );
+
+  Size _textSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
+        if (!isMe)
+          Container(
+            margin: const EdgeInsets.only(left: 8),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(userImage),
+            ),
+          ),
         Container(
           decoration: BoxDecoration(
             color:
@@ -28,7 +53,10 @@ class MessageBubble extends StatelessWidget {
                   !isMe ? const Radius.circular(12) : const Radius.circular(0),
             ),
           ),
-          width: MediaQuery.of(context).size.width * 0.4,
+          width: min(
+              MediaQuery.of(context).size.width * 0.5,
+              max(_textSize(message, textStyle).width,
+                  _textSize(username, textStyle).width)),
           padding: const EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 16,
@@ -61,6 +89,13 @@ class MessageBubble extends StatelessWidget {
             ],
           ),
         ),
+        if (isMe)
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(userImage),
+            ),
+          ),
       ],
     );
   }

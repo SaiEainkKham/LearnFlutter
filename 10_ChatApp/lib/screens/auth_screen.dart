@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:chat_app/widgets/auth/auth_form.dart';
 
@@ -20,6 +23,7 @@ class _AuthScreenState extends State<AuthScreen> {
     String email,
     String username,
     String password,
+    File? image,
     bool isLogin,
     BuildContext ctx,
   ) async {
@@ -32,10 +36,18 @@ class _AuthScreenState extends State<AuthScreen> {
       if (isLogin) {
         authResult = await _auth.signInWithEmailAndPassword(
             email: email, password: password);
-        print('success login');
+        //print('success login');
       } else {
         authResult = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
+
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child('${authResult.user!.uid}.jpg');
+
+        await ref.putFile(image!);
+        final url = await ref.getDownloadURL();
 
         // Store username to firestore
         await FirebaseFirestore.instance
@@ -45,13 +57,14 @@ class _AuthScreenState extends State<AuthScreen> {
           'username': username,
           'email': email,
           'password': password,
+          'image_url': url,
         });
       }
     } on FirebaseAuthException catch (error) {
       var message = 'An error occured, please check your credential';
       if (error.message != null) {
         message = error.message as String;
-        print(message);
+        //print(message);
       }
       ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
         content: Text(message),
@@ -63,7 +76,7 @@ class _AuthScreenState extends State<AuthScreen> {
       });
     } catch (error) {
       // Do error handling
-      print(error);
+      //print(error);
 
       setState(() {
         _isLoading = false;
