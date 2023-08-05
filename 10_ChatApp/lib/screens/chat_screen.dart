@@ -2,12 +2,30 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:chat_app/widgets/chat/new_message.dart';
 import 'package:chat_app/widgets/chat/messages.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  void initState() {
+    FirebaseMessaging.instance.requestPermission();
+    super.initState();
+  }
+
+  void getFCMToken() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print('FCM Token is');
+    print(fcmToken);
+  }
 
   @override
   Widget build(BuildContext context) {
